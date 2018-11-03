@@ -48,6 +48,9 @@ public class ContentProviderTest extends ContentProvider {
         if (code == QUERYSUCCESSCODE){
             // 匹配成功,开始查询
             Cursor myCursor = database.query("info",projection,selection,selectionArgs,null,null,sortOrder);
+
+            // 数据库被查询，发送通知,告诉内容观察者
+            getContext().getContentResolver().notifyChange(uri,null);
             return myCursor;
         }else {
             // 匹配不成功
@@ -61,6 +64,10 @@ public class ContentProviderTest extends ContentProvider {
         if (code == INSERTSUCCESSCODE){
             SQLiteDatabase database = sqliteHelper.getWritableDatabase();
             long result = database.insert("info",null,values);
+
+            // 数据库被插入数据，发送通知,告诉内容观察者
+            getContext().getContentResolver().notifyChange(uri,null);
+
             return Uri.parse(result + "");
         }else {
             return Uri.parse("-1");
@@ -73,6 +80,10 @@ public class ContentProviderTest extends ContentProvider {
         if (code == DELETESUCCESSCODE){
             SQLiteDatabase database = sqliteHelper.getWritableDatabase();
             int rowNum = database.delete("info",selection,selectionArgs);
+
+            // 数据库被删除记录，发送通知,告诉内容观察者
+            getContext().getContentResolver().notifyChange(uri,null);
+
             return  rowNum;
         }else {
             return -1;
@@ -85,6 +96,10 @@ public class ContentProviderTest extends ContentProvider {
         if (code == UPDATESUCCESSCODE){
             SQLiteDatabase database = sqliteHelper.getWritableDatabase();
             int result = database.update("info",values,selection,selectionArgs);
+
+            // 数据库被更新，发送通知,告诉内容观察者
+            getContext().getContentResolver().notifyChange(uri,null);
+
             return result;
         }else {
             return -1;
